@@ -66,3 +66,14 @@ This script is designed for annotating videos using OpenCV. It allows users to d
 ## Output
 
 The annotated video will be saved in a designated output directory with a timestamp in its filename, making it easy to locate and use for further processing or analysis.
+
+---
+
+## Key detection
+
+If your mappings are different, feel free to run the little key detection script, to see what they are.
+
+```python
+cd pyt/input
+python Key_detection.py
+```
