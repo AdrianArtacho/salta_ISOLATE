@@ -3,16 +3,6 @@ import numpy as np
 import os
 from datetime import datetime
 
-#------------- Browse for the file
-import gui.gui_choosefile as gui_choosefile
-filepath = gui_choosefile.main(("Select .mp4 file", '/Volumes/EXTERN/TALLIS-MEDIA/isolate', (".mp4", ".mov")))
-
-print(filepath)
-# # exit()
-#------------- Kernel Size (cotrols the blur)
-kernel_size = 101    ### NEEDS TO BE AN ODD NUMBER!!!!
-#-------------
-
 # Initialize global variables
 ix, iy, ex, ey = -1, -1, -1, -1
 roi_defined = False
@@ -37,25 +27,23 @@ def resize_rectangle(expand=True):
 # Function to move the rectangle
 def move_rectangle(direction):
     global ix, iy, ex, ey
-    moving_rectangle_pixels = 3
     if roi_defined:
         if direction == 'up':
-            iy -= moving_rectangle_pixels
-            ey -= moving_rectangle_pixels
+            iy -= 1
+            ey -= 1
         elif direction == 'down':
-            iy += moving_rectangle_pixels
-            ey += moving_rectangle_pixels
+            iy += 1
+            ey += 1
         elif direction == 'left':
-            ix -= moving_rectangle_pixels
-            ex -= moving_rectangle_pixels
+            ix -= 1
+            ex -= 1
         elif direction == 'right':
-            ix += moving_rectangle_pixels
-            ex += moving_rectangle_pixels
+            ix += 1
+            ex += 1
 
 # Mouse callback function
 def draw_rectangle(event, x, y, flags, param):
     global ix, iy, ex, ey, roi_defined, drawing, paused
-    # ... existing code ...
 
     if event == cv2.EVENT_RBUTTONDOWN:
         drawing = True
@@ -79,9 +67,7 @@ def draw_rectangle(event, x, y, flags, param):
         ex, ey = ix + w, iy + h
 
 # Load the video
-# video_path = '/Users/artacho/Downloads/exp5b_RAW.mp4'
-# video_path = '/Volumes/EXTERN/TALLIS-MEDIA/isolate/shorty.mov'
-video_path = filepath
+video_path = '/Volumes/EXTERN/TALLIS-MEDIA/isolate/shorty.mov'
 cap = cv2.VideoCapture(video_path)
 
 # Create output directory if it doesn't exist
@@ -111,13 +97,13 @@ while cap.isOpened():
         resize_rectangle(expand=False)
     elif key == ord('p'):
         video_paused = not video_paused
-    elif key == 0:  # Up arrow key 82
+    elif key == 0xFF52:  # Up arrow key
         move_rectangle('up')
-    elif key == 3:  # Right arrow key 83
+    elif key == 0xFF53:  # Right arrow key
         move_rectangle('right')
-    elif key == 2:  # Left arrow key 81
+    elif key == 0xFF51:  # Left arrow key
         move_rectangle('left')
-    elif key == 1:  # Down arrow key 84
+    elif key == 0xFF54:  # Down arrow key
         move_rectangle('down')
 
     if not video_paused:

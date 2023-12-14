@@ -3,59 +3,19 @@ import numpy as np
 import os
 from datetime import datetime
 
-#------------- Browse for the file
-import gui.gui_choosefile as gui_choosefile
-filepath = gui_choosefile.main(("Select .mp4 file", '/Volumes/EXTERN/TALLIS-MEDIA/isolate', (".mp4", ".mov")))
-
-print(filepath)
-# # exit()
-#------------- Kernel Size (cotrols the blur)
-kernel_size = 101    ### NEEDS TO BE AN ODD NUMBER!!!!
-#-------------
-
 # Initialize global variables
 ix, iy, ex, ey = -1, -1, -1, -1
 roi_defined = False
 drawing = False
 paused = False
-video_paused = False  # Flag for pausing video capture and recording
+video_paused = False  # New flag for pausing video capture and recording
 frame_buffer = []
 frame_number = 0
 max_buffer_size = 30
 
-# Function to resize the rectangle
-def resize_rectangle(expand=True):
-    global ix, iy, ex, ey
-    if roi_defined:
-        center_x, center_y = (ix + ex) // 2, (iy + ey) // 2
-        width, height = ex - ix, ey - iy
-        width += 4 if expand else -4
-        height += 4 if expand else -4
-        ix, iy = center_x - width // 2, center_y - height // 2
-        ex, ey = center_x + width // 2, center_y + height // 2
-
-# Function to move the rectangle
-def move_rectangle(direction):
-    global ix, iy, ex, ey
-    moving_rectangle_pixels = 3
-    if roi_defined:
-        if direction == 'up':
-            iy -= moving_rectangle_pixels
-            ey -= moving_rectangle_pixels
-        elif direction == 'down':
-            iy += moving_rectangle_pixels
-            ey += moving_rectangle_pixels
-        elif direction == 'left':
-            ix -= moving_rectangle_pixels
-            ex -= moving_rectangle_pixels
-        elif direction == 'right':
-            ix += moving_rectangle_pixels
-            ex += moving_rectangle_pixels
-
 # Mouse callback function
 def draw_rectangle(event, x, y, flags, param):
     global ix, iy, ex, ey, roi_defined, drawing, paused
-    # ... existing code ...
 
     if event == cv2.EVENT_RBUTTONDOWN:
         drawing = True
@@ -80,8 +40,7 @@ def draw_rectangle(event, x, y, flags, param):
 
 # Load the video
 # video_path = '/Users/artacho/Downloads/exp5b_RAW.mp4'
-# video_path = '/Volumes/EXTERN/TALLIS-MEDIA/isolate/shorty.mov'
-video_path = filepath
+video_path = '/Volumes/EXTERN/TALLIS-MEDIA/isolate/shorty.mov'
 cap = cv2.VideoCapture(video_path)
 
 # Create output directory if it doesn't exist
@@ -104,21 +63,9 @@ cv2.setMouseCallback('Frame', draw_rectangle)
 while cap.isOpened():
     key = cv2.waitKey(1) & 0xFF
 
-    # Handle key events for resizing and moving
-    if key == ord('+'):  # Numpad '+' to expand rectangle
-        resize_rectangle(expand=True)
-    elif key == ord('-'):  # Numpad '-' to shrink rectangle
-        resize_rectangle(expand=False)
-    elif key == ord('p'):
+    # Toggle video pause with 'p' key
+    if key == ord('p'):
         video_paused = not video_paused
-    elif key == 0:  # Up arrow key 82
-        move_rectangle('up')
-    elif key == 3:  # Right arrow key 83
-        move_rectangle('right')
-    elif key == 2:  # Left arrow key 81
-        move_rectangle('left')
-    elif key == 1:  # Down arrow key 84
-        move_rectangle('down')
 
     if not video_paused:
         ret, frame = cap.read()
@@ -129,9 +76,8 @@ while cap.isOpened():
             frame_buffer.pop(0)
         frame_number += 1
 
-    display_frame = frame_buffer[-1].copy() if frame_buffer else None
+        display_frame = frame_buffer[-1].copy()
 
-    if display_frame is not None:
         if roi_defined and ix != -1 and iy != -1 and ex != -1 and ey != -1:
             mask = np.zeros(display_frame.shape[:2], dtype="uint8")
             cv2.rectangle(mask, (ix, iy), (ex, ey), 255, -1)
@@ -139,12 +85,15 @@ while cap.isOpened():
             blurred_frame = cv2.GaussianBlur(display_frame, (51, 51), 0)
             outside_roi = cv2.bitwise_and(blurred_frame, blurred_frame, mask=cv2.bitwise_not(mask))
             display_frame = cv2.add(masked_frame, outside_roi)
-            cv2.rectangle(display_frame, (ix, iy), (ex, ey), (0, 255, 0), 2)
+            if not drawing:
+                cv2.rectangle(display_frame, (ix, iy), (ex, ey), (0, 255, 0), 2)
+            else:
+                cv2.rectangle(display_frame, (ix, iy), (ex, ey), (0, 255, 0), 2, cv2.LINE_AA)  # Dashed rectangle
 
         cv2.imshow('Frame', display_frame)
 
-    if not video_paused and not paused:
-        out.write(display_frame)
+        if not paused:
+            out.write(display_frame)
 
     if key == ord('q'):
         break

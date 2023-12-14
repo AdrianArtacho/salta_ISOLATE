@@ -3,16 +3,6 @@ import numpy as np
 import os
 from datetime import datetime
 
-#------------- Browse for the file
-import gui.gui_choosefile as gui_choosefile
-filepath = gui_choosefile.main(("Select .mp4 file", '/Volumes/EXTERN/TALLIS-MEDIA/isolate', (".mp4", ".mov")))
-
-print(filepath)
-# # exit()
-#------------- Kernel Size (cotrols the blur)
-kernel_size = 101    ### NEEDS TO BE AN ODD NUMBER!!!!
-#-------------
-
 # Initialize global variables
 ix, iy, ex, ey = -1, -1, -1, -1
 roi_defined = False
@@ -80,8 +70,7 @@ def draw_rectangle(event, x, y, flags, param):
 
 # Load the video
 # video_path = '/Users/artacho/Downloads/exp5b_RAW.mp4'
-# video_path = '/Volumes/EXTERN/TALLIS-MEDIA/isolate/shorty.mov'
-video_path = filepath
+video_path = '/Volumes/EXTERN/TALLIS-MEDIA/isolate/shorty.mov'
 cap = cv2.VideoCapture(video_path)
 
 # Create output directory if it doesn't exist
