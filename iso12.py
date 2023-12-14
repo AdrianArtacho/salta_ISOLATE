@@ -3,15 +3,6 @@ import numpy as np
 import os
 from datetime import datetime
 
-#------------- Browse for the file
-import gui.gui_choosefile as gui_choosefile
-filepath = gui_choosefile.main(("Select .mp4 file", '', '.mp4'))
-print(filepath)
-# # exit()
-#------------- Kernel Size (cotrols the blur)
-kernel_size = 101    ### NEEDS TO BE AN ODD NUMBER!!!!
-#-------------
-
 # Initialize global variables
 ix, iy, ex, ey = -1, -1, -1, -1
 roi_defined = False
@@ -53,8 +44,7 @@ def rewind_frames(steps):
         paused = True  # Pause after rewinding
 
 # Load the video
-# video_path = '/Users/artacho/Downloads/exp5b_RAW.mp4'
-video_path = filepath
+video_path = '/Users/artacho/Downloads/exp5b_RAW.mp4'
 cap = cv2.VideoCapture(video_path)
 
 # Create output directory if it doesn't exist
@@ -89,21 +79,18 @@ while cap.isOpened():
     if drawing or (roi_defined and ix != -1 and iy != -1 and ex != -1 and ey != -1):
         # Draw green rectangle during editing
         cv2.rectangle(display_frame, (ix, iy), (ex, ey), (0, 255, 0), 2)
-        # Draw a small green cross in the middle of the rectangle
-        center_x, center_y = (ix + ex) // 2, (iy + ey) // 2
-        cv2.drawMarker(display_frame, (center_x, center_y), (0, 255, 0), cv2.MARKER_CROSS, 10, 2)
 
     if roi_defined:
         mask = np.zeros(display_frame.shape[:2], dtype="uint8")
         cv2.rectangle(mask, (ix, iy), (ex, ey), 255, -1)
         masked_frame = cv2.bitwise_and(display_frame, display_frame, mask=mask)
-        blurred_frame = cv2.GaussianBlur(display_frame, (kernel_size, kernel_size), 0) #AAB
+        blurred_frame = cv2.GaussianBlur(display_frame, (51, 51), 0)
         outside_roi = cv2.bitwise_and(blurred_frame, blurred_frame, mask=cv2.bitwise_not(mask))
         display_frame = cv2.add(masked_frame, outside_roi)
 
     cv2.imshow('Frame', display_frame)
 
-    # Write to output without the ROI rectangle and cross
+    # Write to output without the ROI rectangle
     if roi_defined:
         output_frame = frame_buffer[-1].copy()
         output_mask = np.zeros(output_frame.shape[:2], dtype="uint8")

@@ -3,15 +3,6 @@ import numpy as np
 import os
 from datetime import datetime
 
-#------------- Browse for the file
-import gui.gui_choosefile as gui_choosefile
-filepath = gui_choosefile.main(("Select .mp4 file", '', '.mp4'))
-print(filepath)
-# # exit()
-#------------- Kernel Size (cotrols the blur)
-kernel_size = 101    ### NEEDS TO BE AN ODD NUMBER!!!!
-#-------------
-
 # Initialize global variables
 ix, iy, ex, ey = -1, -1, -1, -1
 roi_defined = False
@@ -53,8 +44,7 @@ def rewind_frames(steps):
         paused = True  # Pause after rewinding
 
 # Load the video
-# video_path = '/Users/artacho/Downloads/exp5b_RAW.mp4'
-video_path = filepath
+video_path = '/Users/artacho/Downloads/exp5b_RAW.mp4'
 cap = cv2.VideoCapture(video_path)
 
 # Create output directory if it doesn't exist
@@ -97,7 +87,7 @@ while cap.isOpened():
         mask = np.zeros(display_frame.shape[:2], dtype="uint8")
         cv2.rectangle(mask, (ix, iy), (ex, ey), 255, -1)
         masked_frame = cv2.bitwise_and(display_frame, display_frame, mask=mask)
-        blurred_frame = cv2.GaussianBlur(display_frame, (kernel_size, kernel_size), 0) #AAB
+        blurred_frame = cv2.GaussianBlur(display_frame, (51, 51), 0)
         outside_roi = cv2.bitwise_and(blurred_frame, blurred_frame, mask=cv2.bitwise_not(mask))
         display_frame = cv2.add(masked_frame, outside_roi)
 

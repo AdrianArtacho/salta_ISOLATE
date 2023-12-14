@@ -49,7 +49,7 @@ cap = cv2.VideoCapture(video_path)
 
 # Create output directory if it doesn't exist
 output_dir = 'OUTPUT'
-if not os.path exists(output_dir):
+if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
 # Create output video filename with timestamp and source reference
