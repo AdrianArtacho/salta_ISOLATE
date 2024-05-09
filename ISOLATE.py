@@ -5,7 +5,7 @@ from datetime import datetime
 
 #------------- Browse for the file
 import gui.gui_choosefile as gui_choosefile
-filepath = gui_choosefile.main(("Select .mp4 file", '/Volumes/EXTERN/TALLIS-MEDIA/isolate', (".mp4", ".mov")))
+filepath = gui_choosefile.main(("Select .mp4 file", '/Volumes/EXTERN/ATLAS\:PHD/TALLIS-MEDIA/isolate/', (".mp4", ".mov")))
 
 print(filepath)
 # # exit()
@@ -156,3 +156,7 @@ while cap.isOpened():
 cap.release()
 out.release()
 cv2.destroyAllWindows()
+
+##############
+
+print(output_filename)

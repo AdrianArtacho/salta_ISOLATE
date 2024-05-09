@@ -18,6 +18,14 @@ Run the main script:
 python ISOLATE.py
 ```
 
+To 'blacken' all image but that inside the green square, run this script on the *already isolated* video:
+
+```shell
+python blacken.py
+```
+
+Both `_iso.mp4` and `_iso_black.mp4` files will be saved onto the `/OUTPUT` folder.
+
 ---
 
 ## Description
@@ -46,6 +54,12 @@ This script is designed for annotating videos using OpenCV. It allows users to d
 5. **Resume Video:** Press 'p' again to resume video processing. The rectangle will be applied to all frames until paused again.
 6. **Rewind:** Press 'b' to rewind the video by a few frames if needed.
 7. **Quit:** Press 'q' to quit the script. The annotated video will be saved in the specified output directory.
+
+---
+
+### Blacken
+
+Blacken outside of rectangle
 
 ---
 
