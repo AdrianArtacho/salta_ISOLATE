@@ -5,8 +5,8 @@ def resize_clip(clip, target_width, target_height):
     return clip.resize(newsize=(target_width, target_height))
 
 # Load your videos
-clip1 = VideoFileClip("OUTPUT/exp9f_iso-A_resampl1'5.mp4")
-clip2 = VideoFileClip("OUTPUT/exp9f_iso-E_resampl1'5.mp4")
+clip1 = VideoFileClip("OUTPUT/exp9f_iso-A_BLACK_resampl1'5.mp4")
+clip2 = VideoFileClip("OUTPUT/exp9f_iso-E_BLACK_resampl1'5.mp4")
 clip3 = VideoFileClip("OUTPUT/exp9f_iso-J_resampl1'5.mp4")
 
 # Determine the size to which all videos will be resized
@@ -27,4 +27,4 @@ clip3_resized = clip3_resized.set_opacity(0.4)
 composite_clip = CompositeVideoClip([clip1_resized, clip2_resized.set_position("center"), clip3_resized.set_position("center")])
 
 # Write the result to a file
-composite_clip.write_videofile("output_video.mp4", codec="libx264")
+composite_clip.write_videofile("OUTPUT/recombined_trans.mp4", codec="libx264")

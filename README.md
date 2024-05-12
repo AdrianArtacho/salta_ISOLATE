@@ -34,6 +34,20 @@ python resample_video.py
 
 You will be asked to set the desired lenght (in seconds) for the video. Check out the original footage for this.
 
+Finally, you may want to recombine the isolated videos into one. This can be done in two ways:
+
+1. Simply apply transparecy to all videos and overlay them on top of each other.
+
+   ```shell
+   python recombine_trans.py
+   ```
+
+2. Or create a mask where black pixels are fully transparent (specially useful for *blackened* isolated videos). And then combine them.
+
+   ```shell
+   python recombine_alpha.py
+   ```
+
 ---
 
 ## Description
