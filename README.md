@@ -26,6 +26,14 @@ python blacken.py
 
 Both `_iso.mp4` and `_iso_black.mp4` files will be saved onto the `/OUTPUT` folder.
 
+The produced videos seem to have a reduced speed. In order to resample them to their original speed, run:
+
+```shell
+python resample_video.py
+```
+
+You will be asked to set the desired lenght (in seconds) for the video. Check out the original footage for this.
+
 ---
 
 ## Description
