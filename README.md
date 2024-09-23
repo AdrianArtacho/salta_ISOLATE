@@ -9,7 +9,7 @@ This script isolates subjects in a video.
 Create a venv and install required dependencies:
 
 ```bash
-python3 -m venv .venv/bin/activate
+python3 -m venv ./.venv
 
 #activate venv
 source .venv/bin/activate
@@ -18,17 +18,32 @@ pip install -r requirements.txt
 
 ---
 
-## USAGE
+## USAGE (Black our area)
 
-Activate the virtual environment
+Activate venv and run `rect_HELPER.py` to set the position of the black rectangle.
 
-```shell
+```bash
 source .venv/bin/activate
+python rect_HELPER.py
 ```
 
-Run the main script:
+You may draw rectangles on the video image, only when paused (`spacebar`).
+The position of said rectangles will be stored as `OUTPUT/rectangle_positions.txt`.
 
-```shell
+Now run the main script, which will use `rectangle_positions.txt` to render the video with a black rectangle covering those areas. The result will be saved as `OUTPUT/output_video_with_rectangles.mp4`.
+
+```bash
+python RECT.py
+```
+
+---
+
+## USAGE (focus on area)
+
+Activate the virtual environment and run the main script:
+
+```bash
+source .venv/bin/activate
 python ISOLATE.py
 ```
 
@@ -51,13 +66,13 @@ You will be asked to set the desired lenght (in seconds) for the video. Check ou
 Finally, you may want to recombine the isolated videos into one. This can be done in two ways:
 
 1. Simply apply transparecy to all videos and overlay them on top of each other.
-   
-   ```shell
+
+   ```bash
    python recombine_trans.py
    ```
 
 2. Or create a mask where black pixels are fully transparent (specially useful for *blackened* isolated videos). And then combine them.
-   
+
    ```shell
    python recombine_alpha.py
    ```

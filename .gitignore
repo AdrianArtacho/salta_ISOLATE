@@ -54,3 +54,6 @@ Thumbs.db
 # Ignore all the contents of a folder, but keep empy folder structure
 OUTPUT/*
 !OUTPUT/.gitkeep
+
+INPUT/*
+!INPUT/.gitkeep
