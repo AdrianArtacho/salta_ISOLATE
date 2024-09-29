@@ -18,7 +18,7 @@ pip install -r requirements.txt
 
 ---
 
-## USAGE (Black our area)
+## USAGE (Black out area)
 
 Activate venv and run `rect_HELPER.py` to set the position of the black rectangle.
 

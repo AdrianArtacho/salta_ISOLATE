@@ -1,5 +1,8 @@
 import cv2
 import rect_positions
+import gui.gui_browse_t as gui_browse
+import gui.gui_enterstring_t as gui_enterstring
+import replace_txt
 
 def add_black_rectangle_to_video(input_video_path, output_video_path, positions):
     # Open the video
@@ -54,21 +57,47 @@ def add_black_rectangle_to_video(input_video_path, output_video_path, positions)
     cv2.destroyAllWindows()
 
 
+def main():
 
-positions = rect_positions.read_rectangles_file('OUTPUT/rectangles_positions.txt')
-# exit()
-# # Example usage:
-# positions = [
-#     # (start_time, end_time, x, y, width, height)
-#     (0, 136, 0, 0, 600, 950),  # Rectangle from second 0 to 5 at position (100, 100)
-#     (136, 142, 0, 0, 200, 950),  # Move to position (300, 200) from second 5 to 10
-#     (142, 170, 0, 0, 600, 950),   # Move again to (50, 50) from second 10 to 15
-#     (170, 176, 0, 0, 200, 950),
-#     (176, 191, 0, 0, 600, 950),
-#     (191, 235, 0, 0, 200, 950),
-# ]
+    input_video_path = gui_browse.main(params_title='Browse files', 
+                 params_initbrowser='./INPUT', 
+                 params_extensions=('.mp4',), 
+                #  size='',   #Useless, here wor back-compatibility
+                 verbose=False)
 
-input_video_path = 'INPUT/LigetiSonate.mp4'  # Path to your input video
-output_video_path = 'OUTPUT/output_video_with_rectangles.mp4'  # Path to save the output video
+    positions_txt = 'OUTPUT/rectangles_positions.txt'
 
-add_black_rectangle_to_video(input_video_path, output_video_path, positions)
+    positions = rect_positions.read_rectangles_file(positions_txt)
+    # exit()
+    # # Example usage:
+    # positions = [
+    #     # (start_time, end_time, x, y, width, height)
+    #     (0, 136, 0, 0, 600, 950),  # Rectangle from second 0 to 5 at position (100, 100)
+    #     (136, 142, 0, 0, 200, 950),  # Move to position (300, 200) from second 5 to 10
+    #     (142, 170, 0, 0, 600, 950),   # Move again to (50, 50) from second 10 to 15
+    #     (170, 176, 0, 0, 200, 950),
+    #     (176, 191, 0, 0, 600, 950),
+    #     (191, 235, 0, 0, 200, 950),
+    # ]
+
+    # input_video_path = 'INPUT/LigetiSonate.mp4'  # Path to your input video
+    # output_video_path = 'OUTPUT/output_video_with_rectangles.mp4'  # Path to save the output video
+
+    output_video_name = gui_enterstring.main("Enter the name you want for the output video", 
+                                             "text_enter", 
+                                             "Output video name", 
+                                            #  font=("Arial", 16), 
+                                             default_text='output_video_with_rectangles', 
+                                             verbose=False)
+    
+    output_video_path = 'OUTPUT/'+output_video_name+'.mp4'
+
+    add_black_rectangle_to_video(input_video_path, output_video_path, positions)
+
+    print("positions_txt:", positions_txt, type(positions_txt))
+    print("output_video_name:", output_video_name, type(output_video_name))
+    replace_txt.main(positions_txt, "OUTPUT/"+output_video_name+".txt")
+
+
+if __name__ == "__main__":
+    main()

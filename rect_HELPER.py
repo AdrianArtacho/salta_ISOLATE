@@ -1,4 +1,13 @@
 import cv2
+import gui.gui_browse_t as gui_browse
+import gui.gui_button_t as gui_button
+import pyt.paths.parse_path as parse_path
+import os
+import replace_first
+import replace_last
+# import gui.gui_enterstring_t as gui_enterstring
+
+
 
 # Global variables for drawing the rectangle
 drawing = False  # True if the mouse is pressed
@@ -6,6 +15,7 @@ ix, iy = -1, -1  # Initial coordinates
 current_rectangle = None  # To store the most recent rectangle and its time info
 rectangles = []  # To store all drawn rectangles
 paused = False  # Keep track of the video pause state
+output_file = 'OUTPUT/rectangles_positions.txt'
 
 def clear_rectangles_file(filename):
     # Open the file in write mode to clear its contents
@@ -115,9 +125,61 @@ def play_video_and_capture_rectangles(video_path, output_file):
     video.release()
     cv2.destroyAllWindows()
 
-# Example usage
-video_path = 'INPUT/LigetiSonate.mp4'
-output_file = 'OUTPUT/rectangles_positions.txt'
 
-clear_rectangles_file(output_file)
-play_video_and_capture_rectangles(video_path, output_file)
+def main(verbose=False, fix_first=True, fix_last=True):
+    path = gui_browse.main(params_title='Browse files', 
+                    params_initbrowser='./INPUT', 
+                    params_extensions=('.mp4',), 
+                    #  size='',   #Useless, here wor back-compatibility
+                    verbose=verbose)
+
+    if verbose:
+        print(path)
+    
+    file_tuple = parse_path.main(path, 
+            folder = True,    # If True, it also outputs the folder containing the file
+            verbose=verbose)
+    
+    if verbose:
+        print(file_tuple)
+    
+    # Extracting the components
+    filename = file_tuple[0] + file_tuple[1]  # Combine 'exp9f' and '.mp4'
+    directory = file_tuple[2]
+
+    # Creating the relative path
+    video_path = os.path.join(directory, filename)
+
+    if verbose:
+        print(video_path)
+    # exit()
+
+    # Example usage
+    # video_path = 'INPUT/LigetiSonate.mp4'
+    # output_file = 'OUTPUT/rectangles_positions.txt'
+
+    # exit()
+    clear_rectangles_file(output_file)
+    play_video_and_capture_rectangles(video_path, output_file)
+
+    if fix_first:
+        fix_first_options = ["set first rectangle to 0.00", "leave untouched"]
+        fix_first_answer = gui_button.main(fix_first_options, default_option=0,
+                        dialog_text="Select an Option",
+                        title="Choice", verbose=False)
+        if fix_first_answer == fix_first_options[0]:
+            replace_first.main(output_file)
+    
+    if fix_last:
+        fix_last_options = ["Extend last rectangle to end of video", "leave untouched"]
+        fix_last_answer = gui_button.main(fix_last_options, default_option=0,
+                        dialog_text="Select an Option",
+                        title="Choice", verbose=False)
+        
+        print("fix_last_answer:", fix_last_answer)
+        if fix_last_answer == fix_first_options[0]:
+            replace_last.main(output_file)
+
+
+if __name__ == "__main__":
+    main(fix_first=True, fix_last=True)
