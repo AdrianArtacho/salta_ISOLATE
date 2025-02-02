@@ -4,3 +4,6 @@
 [submodule "pyt"]
 	path = pyt
 	url = https://bitbucket.org/smoothspaces/pyt_abstractions
+[submodule "BackgroundRemoval"]
+	path = BackgroundRemoval
+	url = https://AdrianArtacho@bitbucket.org/smoothspaces/backgroundremoval.git
