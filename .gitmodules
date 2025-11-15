@@ -3,7 +3,7 @@
 url=https://github.com/AdrianArtacho/salta_gui.git
 [submodule "pyt"]
 	path = pyt
-	url = https://bitbucket.org/smoothspaces/pyt_abstractions
+url=https://github.com/AdrianArtacho/salta_pyt.git
 [submodule "BackgroundRemoval"]
 	path = BackgroundRemoval
 	url = https://AdrianArtacho@bitbucket.org/smoothspaces/backgroundremoval.git
